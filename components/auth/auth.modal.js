@@ -2,7 +2,7 @@ import { View, Text, Pressable, Image, Platform } from "react-native";
 import React, { useEffect } from "react";
 import { BlurView } from "expo-blur";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
 import JWT from "expo-jwt";
 import axios from "axios";
@@ -12,16 +12,16 @@ import * as WebBrowser from "expo-web-browser";
 
 export default function AuthModal({ setModalVisible }) {
   const configureGoogleSignIn = () => {
-    if (Platform.OS === "ios") {
-      GoogleSignin.configure({
-        iosClientId: process.env.EXPO_PUBLIC_IOS_GOOGLE_API_KEY,
-      });
-    } else {
-      GoogleSignin.configure({
-        webClientId:
-          "500604689956-74tau857bhoviihkt0jsqitldq4tsjlf.apps.googleusercontent.com",
-      });
-    }
+    // if (Platform.OS === "ios") {
+    //   GoogleSignin.configure({
+    //     iosClientId: process.env.EXPO_PUBLIC_IOS_GOOGLE_API_KEY,
+    //   });
+    // } else {
+    //   GoogleSignin.configure({
+    //     webClientId:
+    //       "500604689956-74tau857bhoviihkt0jsqitldq4tsjlf.apps.googleusercontent.com",
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -105,17 +105,18 @@ export default function AuthModal({ setModalVisible }) {
   };
 
   const googleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      await authHandler({
-        name: userInfo.user.name,
-        email: userInfo.user.email,
-        avatar: userInfo.user.photo,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    console.log("Clicked google")
+    // try {
+    //   await GoogleSignin.hasPlayServices();
+    //   const userInfo = await GoogleSignin.signIn();
+    //   await authHandler({
+    //     name: userInfo.user.name,
+    //     email: userInfo.user.email,
+    //     avatar: userInfo.user.photo,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const authHandler = async ({ name, email, avatar }) => {
@@ -135,7 +136,7 @@ export default function AuthModal({ setModalVisible }) {
 
   return (
     <BlurView
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      style={{ flex: 1, justifyContent: "center", alignItems: "center", top: 100 }}
     >
       <Pressable
         style={{

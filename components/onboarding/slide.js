@@ -140,6 +140,7 @@ import AuthModal from "../auth/auth.modal";
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}
+          style={{backgroundColor:"red"}}
         >
           <Pressable style={{ flex: 1 }} onPress={() => setModalVisible(false)}>
             <AuthModal setModalVisible={setModalVisible} />
