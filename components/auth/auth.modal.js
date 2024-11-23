@@ -106,17 +106,24 @@ export default function AuthModal({ setModalVisible }) {
 
   const googleSignIn = async () => {
     console.log("Clicked google")
-    // try {
+    try {
     //   await GoogleSignin.hasPlayServices();
     //   const userInfo = await GoogleSignin.signIn();
-    //   await authHandler({
-    //     name: userInfo.user.name,
-    //     email: userInfo.user.email,
-    //     avatar: userInfo.user.photo,
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const userInfo = {
+        user:{
+            name : "Test account",
+            email : "test@gmail.com",
+            photo : "Test account",
+        }
+    }
+      await authHandler({
+        name: userInfo.user.name,
+        email: userInfo.user.email,
+        avatar: userInfo.user.photo,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const authHandler = async ({ name, email, avatar }) => {
