@@ -138,14 +138,29 @@ import AuthModal from "../auth/auth.modal";
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setModalVisible(!modalVisible)
           }}
-          style={{backgroundColor:"red"}}
-        >
-          <Pressable style={{ flex: 1 }} onPress={() => setModalVisible(false)}>
-            <AuthModal setModalVisible={setModalVisible} />
-          </Pressable>
+          >
+           <View style={styles.modalContainer}>
+            <Pressable 
+              style={styles.modalOverlay} 
+              onPress={() => setModalVisible(false)}
+            >
+              <Pressable 
+                style={styles.modalContent}
+                onPress={(e) => e.stopPropagation()} // Prevents modal from closing when clicking content
+              >
+                <AuthModal setModalVisible={setModalVisible} />
+              </Pressable>
+            </Pressable>
+          </View>
         </Modal>
+        
+        <AuthModalWrapper 
+          visible={modalVisible} 
+          setModalVisible={setModalVisible} />
+
+
       </>
     );
   }
@@ -206,5 +221,50 @@ import AuthModal from "../auth/auth.modal";
       top: Platform.OS === "ios" ? verticalScale(345) : verticalScale(385),
       transform: [{ translateY: -30 }],
     },
+    modalContainer: {
+      flex: 1
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContent: {
+      width: '90%',
+      flex: 1
+    },
   });
   
+
+
+  // First, separate the Modal into its own component to ensure clean mounting
+const AuthModalWrapper = ({ visible, setModalVisible }) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <BlurView 
+        intensity={20} 
+        style={styles.modalContainer}
+      >
+        <Pressable 
+          style={styles.modalOverlay}
+          onPress={() => setModalVisible(false)}
+        >
+          <View 
+            style={styles.modalContent}
+            // This prevents the modal from closing when clicking inside
+            onStartShouldSetResponder={() => true}
+            onTouchEnd={e => e.stopPropagation()}
+          >
+            <AuthModal setModalVisible={setModalVisible} />
+          </View>
+        </Pressable>
+      </BlurView>
+    </Modal>
+  );
+};
