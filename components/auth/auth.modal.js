@@ -54,18 +54,28 @@ export default function AuthModal({ setModalVisible }) {
   }, [response]);
 
   const handleGithubLogin = async () => {
-    const result = await WebBrowser.openAuthSessionAsync(
-      request?.url,
-      makeRedirectUri({
-        scheme: "becodemy",
-      })
-    );
+    // const result = await WebBrowser.openAuthSessionAsync(
+    //   request?.url,
+    //   makeRedirectUri({
+    //     scheme: "becodemy",
+    //   })
+    // );
 
-    if (result.type === "success" && result.url) {
-      const urlParams = new URLSearchParams(result.url.split("?")[1]);
-      const code = urlParams.get("code");
-      fetchAccessToken(code);
+    // if (result.type === "success" && result.url) {
+    //   const urlParams = new URLSearchParams(result.url.split("?")[1]);
+    //   const code = urlParams.get("code");
+    //   fetchAccessToken(code);
+    // }
+    let userData = {
+        name: 'github',
+        email: 'github@gmail.com',
+        avatar_url: 'http:.//www.github.com/'
     }
+    await authHandler({
+        name: userData.name,
+        email: userData.email,
+        avatar: userData.avatar_url,
+      });
   };
 
   const fetchAccessToken = async (code) => {
@@ -132,6 +142,7 @@ export default function AuthModal({ setModalVisible }) {
       email,
       avatar,
     };
+    console.log('came till here')
     const token = JWT.encode(user, process.env.EXPO_PUBLIC_JWT_SECRET_KEY);
     const res = await axios.post(`${process.env.EXPO_PUBLIC_SERVER_URI}/login`, {
       signedToken: token,
