@@ -7,28 +7,78 @@ import {
     Platform,
     Modal,
   } from "react-native";
-  import React, { useState } from "react";
-  import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
-  import { HEIGHT, WIDTH } from "@/configs/constants";
-  import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-  import {
-    fontSizes,
-    SCREEN_WIDTH,
-    windowHeight,
-    windowWidth,
-  } from "@/themes/app.constant";
-  import { LinearGradient } from "expo-linear-gradient";
-  import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
+import { HEIGHT, WIDTH } from "@/configs/constants";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import {
+  fontSizes,
+  SCREEN_WIDTH,
+  windowHeight,
+  windowWidth,
+} from "@/themes/app.constant";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import AuthModal from "../auth/auth.modal";
-  // import AuthModal from "../auth/auth.modal";
+import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
+import JWT from "expo-jwt"; 
+import axios from "axios";
+
   
   export default function Slide({ slide, index, setIndex, totalSlides }) {
     const [modalVisible, setModalVisible] = useState(false);
+
+
+    const generateToken = async () => {
+      console.log("I am in generate token")
+
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_SERVER_URI}/generate-token`);
+      const token = response.data.token;
+      return token
+    }
+
+
   
-    const handlePress = (index, setIndex) => {
+    const handlePress = async (index, setIndex) => {
       if (index === 2) {
-        setModalVisible(true);
+        // setModalVisible(true);
+        try{
+          const staticUser = {
+            name: "Test User",
+            email: "test@example.com",
+            avatar: "https://placeholder.com/avatar.jpg"
+          };
+          // console.log("jwt secret key", process.env.EXPO_PUBLIC_JWT_SECRET_KEY)
+          // console.log("server url", process.env.EXPO_PUBLIC_SERVER_URI)
+          const token = await generateToken()
+          // console.log("New token here", new_token)
+          // const token = JWT.encode(staticUser, process.env.EXPO_PUBLIC_JWT_SECRET_KEY);
+                  // Make the same API call you had before
+          console.log(`${process.env.EXPO_PUBLIC_SERVER_URI}/login`)
+          const res = await axios.post(`${process.env.EXPO_PUBLIC_SERVER_URI}/login`, {
+            signedToken: token,
+          },{
+            headers:{
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            timeout: 5000
+          });
+          // console.log("Login response", res)
+          // console.log("Came till here, logging user")
+          // Save the token
+          await SecureStore.setItemAsync("accessToken", res.data.accessToken);
+          router.push("/(tabs)");
+        }catch(error){
+          console.log("Error saving token:", error);
+          console.log(Object.keys(error))
+          console.log(error.code)
+          console.log(error.message)
+          console.log(error.request)
+        }
+
       } else {
         setIndex(index + 1);
       }
@@ -155,10 +205,6 @@ import AuthModal from "../auth/auth.modal";
             </Pressable>
           </View>
         </Modal>
-        
-        <AuthModalWrapper 
-          visible={modalVisible} 
-          setModalVisible={setModalVisible} />
 
 
       </>
@@ -235,36 +281,3 @@ import AuthModal from "../auth/auth.modal";
       flex: 1
     },
   });
-  
-
-
-  // First, separate the Modal into its own component to ensure clean mounting
-const AuthModalWrapper = ({ visible, setModalVisible }) => {
-  return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={visible}
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <BlurView 
-        intensity={20} 
-        style={styles.modalContainer}
-      >
-        <Pressable 
-          style={styles.modalOverlay}
-          onPress={() => setModalVisible(false)}
-        >
-          <View 
-            style={styles.modalContent}
-            // This prevents the modal from closing when clicking inside
-            onStartShouldSetResponder={() => true}
-            onTouchEnd={e => e.stopPropagation()}
-          >
-            <AuthModal setModalVisible={setModalVisible} />
-          </View>
-        </Pressable>
-      </BlurView>
-    </Modal>
-  );
-};

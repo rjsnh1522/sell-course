@@ -34,17 +34,17 @@ export default function AuthModal({ setModalVisible }) {
     revocationEndpoint: `https://github.com/settings/connections/applications/${process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID}`,
   };
 
-  const [request, response] = useAuthRequest(
-    {
-      clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID,
-      clientSecret: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET,
-      scopes: ["identity"],
-      redirectUri: makeRedirectUri({
-        scheme: "becodemy",
-      }),
-    },
-    githubAuthEndpoints
-  );
+  // const [request, response] = useAuthRequest(
+  //   {
+  //     clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID,
+  //     clientSecret: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET,
+  //     scopes: ["identity"],
+  //     redirectUri: makeRedirectUri({
+  //       scheme: "becodemy",
+  //     }),
+  //   },
+  //   githubAuthEndpoints
+  // );
 
   useEffect(() => {
     if (response?.type === "success") {
@@ -143,6 +143,9 @@ export default function AuthModal({ setModalVisible }) {
       avatar,
     };
     console.log('came till here')
+    const new_token = await generateToken({userId: '1234', email: 'test@gmail.com'})
+    console.log("Get new token", new_token)
+
     const token = JWT.encode(user, process.env.EXPO_PUBLIC_JWT_SECRET_KEY);
     const res = await axios.post(`${process.env.EXPO_PUBLIC_SERVER_URI}/login`, {
       signedToken: token,
