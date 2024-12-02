@@ -11,7 +11,7 @@ const index = () => {
     useEffect(() => {
         const subscription = async () => {
             let token = false
-            SecureStore.deleteItemAsync('accessToken')
+            // SecureStore.deleteItemAsync('accessToken')
             if (Platform.OS === 'web'){
                 token = await AsyncStorage.getItem("accessToken")
                 console.log('its a web')

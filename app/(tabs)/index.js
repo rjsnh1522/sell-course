@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import HomeScreen from '../../screens/home.screen'
 
 const TabsIndex = () => {
   return (
-    <View>
-      <Text>TabsIndex</Text>
-    </View>
+    <HomeScreen />
   )
 }
 
