@@ -79,6 +79,9 @@ export default function HomeScreen() {
             <>
               <SkeltonLoader />
               <SkeltonLoader />
+              <SkeltonLoader />
+              <SkeltonLoader />
+              <SkeltonLoader />
             </>
           ) : (
             <View>

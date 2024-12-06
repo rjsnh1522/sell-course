@@ -1,11 +1,9 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import ResourcesScreen from '../../../screens/resources.screen'
 
 const ResourceIndex = () => {
   return (
-    <View>
-      <Text>ResourceIndex</Text>
-    </View>
+    <ResourcesScreen />
   )
 }
 
